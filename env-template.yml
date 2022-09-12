@@ -1,0 +1,27 @@
+############################################################
+# Sample Environment variable template
+# Defines the form displayed to users in the device or group settings to provide parameters to the app
+############################################################
+
+# NOTE: Template entries without a label property will not be displayed
+# NOTE: the "label" and "type" must be present on each variable
+
+DESKTOP_SIZE:                                      # The name of the environment variable that contains the user provided value
+    label: Desktop Size                            # Label displayed above the input field. (string)
+    type: text                           # Type of value. ('numeric' | 'text' | 'boolean')
+    defaultValue: -1280x1024                    # Default value. (string | number)
+    description: Size in Pixels of the Desktop Environment      # Description. (string)
+    secret: false                           # Makes value invisible once set. (boolean)
+    optional: true                          # Is the field optional or required. (boolean)
+DESKTOP_VNC_PASSWORD:
+    label: VNC Password
+    type: text
+    defaultValue: test
+    description: Password to log in with a VNC Client application
+    secret: true
+    optional: false
+DESKTOP_ENV:          
+    label: Desktop Env
+    type: text        
+    defaultValue: ratpoison
+    optional: true 

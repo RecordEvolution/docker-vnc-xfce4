@@ -13,7 +13,6 @@ RUN     \
         && apt-get update                                  \
         && apt-get install -y                              \
           apt-utils                                        \
-          language-pack-fr                                 \
           software-properties-common                       \
           tzdata                                           \
         && apt-get clean                                   \
@@ -72,7 +71,7 @@ RUN     \
           vim                                              \
           vlc                                              \
           xz-utils                                         \
-          zip                                              \
+          zip wget psmisc                                             \
         && apt-get install -y thunar-archive-plugin        \
         && apt-get clean                                   \
         && apt-get autoremove -y                           \
@@ -95,20 +94,29 @@ RUN     \
         && rm -rf /var/lib/apt/lists/* /var/cache/apt/*       \
         && echo "Install Firefox from Mozilla OK" >&2
 
+# Install Wine
+
+RUN dpkg --add-architecture i386
+RUN wget -nc -O /usr/share/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+RUN wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
+RUN apt-get update && \
+    apt-get install -y --install-recommends wine32 wine64 wine-staging cabextract msitools xvfb xdotool jwm procps
+
+
 # We can add additional GUI programs
-RUN     \
-        echo "Install additional GUI programs" >&2         \
-        && apt-get update                                  \
-        && apt-get install -y --no-install-recommends      \
-          notepadqq                                        \
-        && apt-get clean                                   \
-        && apt-get autoremove -y                           \
-        && rm -rf /tmp/* /var/tmp/*                        \
-        && rm -rf /var/lib/apt/lists/* /var/cache/apt/*    \
-        && echo "Install additional GUI programs OK" >&2
+# RUN     \
+#         echo "Install additional GUI programs" >&2         \
+#         && apt-get update                                  \
+#         && apt-get install -y --no-install-recommends      \
+#           notepadqq                                       \
+#         && apt-get clean                                   \
+#         && apt-get autoremove -y                           \
+#         && rm -rf /tmp/* /var/tmp/*                        \
+#         && rm -rf /var/lib/apt/lists/* /var/cache/apt/*    \
+#         && echo "Install additional GUI programs OK" >&2
 
 # We add sound
-RUN     printf 'default-server = unix:/run/user/1000/pulse/native\nautospawn = no\ndaemon-binary = /bin/true\nenable-shm = false' > /etc/pulse/client.conf
+# RUN     printf 'default-server = unix:/run/user/1000/pulse/native\nautospawn = no\ndaemon-binary = /bin/true\nenable-shm = false' > /etc/pulse/client.conf
 
 # We add a simple user with sudo rights
 ENV     USR=user
@@ -149,5 +157,17 @@ COPY    bgimage.jpg /usr/share/backgrounds/xfce/bgimage.jpg
 RUN     \
         printf 'if [[ $- = *i* ]] ; then test -f ~/.functions.sh && . ~/.functions.sh ; fi' >> /home/${USR}/.bashrc
 
+# Install CODESYS
+ADD install2.sh /home/${USR}/
+RUN ./install2.sh --silent
+# RUN test -f /home/${USR}/.wine.cds/drive_c/CODESYS/CODESYS/Common/CODESYS.exe
+
+ADD codesys.sh /usr/local/bin/codesys
+ADD codesyscontrol.sh /usr/local/bin/codesyscontrol
+# ADD scripts /usr/local/share/codesys
+
+# RUN codesys install https://store.codesys.com/ftp_download/3S/LinuxSL/2302000005/3.5.16.0/CODESYS%20Control%20for%20Linux%20SL%203.5.16.0.package
+
 #ENTRYPOINT [ "/usr/bin/dumb-init", "--", "/entrypoint.sh" ]
 ENTRYPOINT [ "/entrypoint.sh" ]
+# ENTRYPOINT [ "sleep", "infinity"]
