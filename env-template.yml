@@ -9,7 +9,7 @@
 DESKTOP_SIZE:                                      # The name of the environment variable that contains the user provided value
     label: Desktop Size                            # Label displayed above the input field. (string)
     type: text                           # Type of value. ('numeric' | 'text' | 'boolean')
-    defaultValue: -1280x1024                    # Default value. (string | number)
+    defaultValue: 1280x1024                    # Default value. (string | number)
     description: Size in Pixels of the Desktop Environment      # Description. (string)
     secret: false                           # Makes value invisible once set. (boolean)
     optional: true                          # Is the field optional or required. (boolean)
