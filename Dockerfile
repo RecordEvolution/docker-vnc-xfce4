@@ -96,11 +96,11 @@ RUN     \
 
 # Install Wine
 
-RUN dpkg --add-architecture i386
-RUN wget -nc -O /usr/share/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
-RUN wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
-RUN apt-get update && \
-    apt-get install -y --install-recommends wine32 wine64 wine-staging cabextract msitools xvfb xdotool jwm procps
+# RUN dpkg --add-architecture i386
+# RUN wget -nc -O /usr/share/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+# RUN wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
+# RUN apt-get update && \
+#     apt-get install -y --install-recommends wine32 wine64 cabextract msitools xvfb xdotool jwm procps
 
 
 # We can add additional GUI programs
@@ -158,12 +158,12 @@ RUN     \
         printf 'if [[ $- = *i* ]] ; then test -f ~/.functions.sh && . ~/.functions.sh ; fi' >> /home/${USR}/.bashrc
 
 # Install CODESYS
-ADD install2.sh /home/${USR}/
-RUN ./install2.sh --silent
-# RUN test -f /home/${USR}/.wine.cds/drive_c/CODESYS/CODESYS/Common/CODESYS.exe
+# ADD install2.sh /home/${USR}/
+# RUN ./install2.sh --silent
+# # RUN test -f /home/${USR}/.wine.cds/drive_c/CODESYS/CODESYS/Common/CODESYS.exe
 
-ADD codesys.sh /usr/local/bin/codesys
-ADD codesyscontrol.sh /usr/local/bin/codesyscontrol
+# ADD codesys.sh /usr/local/bin/codesys
+# ADD codesyscontrol.sh /usr/local/bin/codesyscontrol
 # ADD scripts /usr/local/share/codesys
 
 # RUN codesys install https://store.codesys.com/ftp_download/3S/LinuxSL/2302000005/3.5.16.0/CODESYS%20Control%20for%20Linux%20SL%203.5.16.0.package
