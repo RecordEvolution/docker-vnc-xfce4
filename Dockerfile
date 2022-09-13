@@ -1,15 +1,14 @@
 # First we get and update last Ubuntu image
 FROM    ubuntu:jammy
-LABEL   maintainer="cyd@9bis.com"
-
-ARG     PROXY_CERT 
-RUN     test -z "${PROXY_CERT}" || { echo "${PROXY_CERT}" | base64 -d | tee /usr/local/share/ca-certificates/ca-local.crt > /dev/null && update-ca-certificates ; }
+# LABEL   maintainer="cyd@9bis.com"
+#
+# ARG     PROXY_CERT 
+# RUN     test -z "${PROXY_CERT}" || { echo "${PROXY_CERT}" | base64 -d | tee /usr/local/share/ca-certificates/ca-local.crt > /dev/null && update-ca-certificates ; }
 
 # We prepare environment
-ARG     TZ=${TZ:-Etc/UTC}
-ARG     DEBIAN_FRONTEND=noninteractive
-RUN     \
-        echo "Timezone and locale" >&2                     \
+# ARG     TZ=${TZ:-Etc/UTC}
+ENV     DEBIAN_FRONTEND=noninteractive
+RUN     echo "Timezone and locale" >&2                     \
         && apt-get update                                  \
         && apt-get install -y                              \
           apt-utils                                        \
@@ -60,21 +59,21 @@ RUN     \
         echo "Install some tools" >&2                      \
         && apt-get update                                  \
         && apt-get install -y --no-install-recommends      \
-          #curl                                             \
-          #dumb-init                                        \
-          #figlet                                           \
-          #jq                                               \
-          #libnss3-tools                                    \
-          #mlocate                                          \
+          curl                                             \
+          dumb-init                                        \
+          figlet                                           \
+          jq                                               \
+          libnss3-tools                                    \
+          mlocate                                          \
           net-tools                                        \
-          #sudo                                             \
-          #vim                                              \
-          #vlc                                              \
+          sudo                                             \
+          vim                                              \
+          vlc                                              \
           xz-utils                                         \
-          #zip \
+          zip \
           wget \
-          #psmisc                                             \
-        #&& apt-get install -y thunar-archive-plugin        \
+          psmisc                                             \
+        && apt-get install -y thunar-archive-plugin        \
         && apt-get clean                                   \
         && apt-get autoremove -y                           \
         && rm -rf /tmp/* /var/tmp/*                        \
@@ -82,27 +81,27 @@ RUN     \
         && echo "Install some tools OK" >&2
 
 # We install firefox, directly from Mozilla (not from snap)
-RUN     \
-        echo "Install Firefox from Mozilla" >&2               \
-        && apt-get update                                     \
-        && add-apt-repository ppa:mozillateam/ppa             \
-        && printf '\nPackage: *\nPin: release o=LP-PPA-mozillateam\nPin-Priority: 1001\n' > /etc/apt/preferences.d/mozilla-firefox                     \
-        && printf 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' > /etc/apt/apt.conf.d/51unattended-upgrades-firefox \
-        && apt-get update                                     \
-       # && apt-get install -y firefox --no-install-recommends \
-        && apt-get clean                                      \
-        && apt-get autoremove -y                              \
-        && rm -rf /tmp/* /var/tmp/*                           \
-        && rm -rf /var/lib/apt/lists/* /var/cache/apt/*       \
-        && echo "Install Firefox from Mozilla OK" >&2
+# RUN     \
+#         echo "Install Firefox from Mozilla" >&2               \
+#         && apt-get update                                     \
+#         && add-apt-repository ppa:mozillateam/ppa             \
+#         && printf '\nPackage: *\nPin: release o=LP-PPA-mozillateam\nPin-Priority: 1001\n' > /etc/apt/preferences.d/mozilla-firefox                     \
+#         && printf 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' > /etc/apt/apt.conf.d/51unattended-upgrades-firefox \
+#         && apt-get update                                     \
+#        && apt-get install -y firefox --no-install-recommends \
+#         && apt-get clean                                      \
+#         && apt-get autoremove -y                              \
+#         && rm -rf /tmp/* /var/tmp/*                           \
+#         && rm -rf /var/lib/apt/lists/* /var/cache/apt/*       \
+#         && echo "Install Firefox from Mozilla OK" >&2
 
 # Install Wine
 
-# RUN dpkg --add-architecture i386
-# RUN wget -nc -O /usr/share/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
-# RUN wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
-# RUN apt-get update && \
-#     apt-get install -y --install-recommends wine32 wine64 cabextract msitools xvfb xdotool jwm procps
+RUN dpkg --add-architecture i386
+RUN wget -nc -O /usr/share/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key
+RUN wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources
+RUN apt-get update && \
+    apt-get install -y --install-recommends wine32 wine64 cabextract msitools xvfb xdotool jwm procps
 
 
 # We can add additional GUI programs
@@ -137,7 +136,7 @@ RUN     \
 EXPOSE  5900 6080
 
 # We set localtime
-# RUN      if [ "X${TZ}" != "X" ] ; then if [ -f /usr/share/zoneinfo/${TZ} ] ; then rm -f /etc/localtime ; ln -s /usr/share/zoneinfo/${TZ} /etc/localtime ; fi ; fi
+RUN      if [ "X${TZ}" != "X" ] ; then if [ -f /usr/share/zoneinfo/${TZ} ] ; then rm -f /etc/localtime ; ln -s /usr/share/zoneinfo/${TZ} /etc/localtime ; fi ; fi
 
 # And here is the statup script, everything else is in there
 COPY    entrypoint.sh /entrypoint.sh
@@ -160,12 +159,12 @@ RUN     \
         printf 'if [[ $- = *i* ]] ; then test -f ~/.functions.sh && . ~/.functions.sh ; fi' >> /home/${USR}/.bashrc
 
 # Install CODESYS
-# ADD install2.sh /home/${USR}/
-# RUN ./install2.sh --silent
-# # RUN test -f /home/${USR}/.wine.cds/drive_c/CODESYS/CODESYS/Common/CODESYS.exe
+ADD install2.sh /home/${USR}/
+RUN ./install2.sh --silent
+# RUN test -f /home/${USR}/.wine.cds/drive_c/CODESYS/CODESYS/Common/CODESYS.exe
 
-# ADD codesys.sh /usr/local/bin/codesys
-# ADD codesyscontrol.sh /usr/local/bin/codesyscontrol
+ADD codesys.sh /usr/local/bin/codesys
+ADD codesyscontrol.sh /usr/local/bin/codesyscontrol
 # ADD scripts /usr/local/share/codesys
 
 # RUN codesys install https://store.codesys.com/ftp_download/3S/LinuxSL/2302000005/3.5.16.0/CODESYS%20Control%20for%20Linux%20SL%203.5.16.0.package
