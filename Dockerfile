@@ -138,10 +138,6 @@ EXPOSE  5900 6080
 # We set localtime
 RUN      if [ "X${TZ}" != "X" ] ; then if [ -f /usr/share/zoneinfo/${TZ} ] ; then rm -f /etc/localtime ; ln -s /usr/share/zoneinfo/${TZ} /etc/localtime ; fi ; fi
 
-# And here is the statup script, everything else is in there
-COPY    entrypoint.sh /entrypoint.sh
-RUN     chmod 755 /entrypoint.sh
-
 # We do some specials
 RUN     \
         updatedb ;                                       \
@@ -168,6 +164,8 @@ ADD codesyscontrol.sh /usr/local/bin/codesyscontrol
 # ADD scripts /usr/local/share/codesys
 
 # RUN codesys install https://store.codesys.com/ftp_download/3S/LinuxSL/2302000005/3.5.16.0/CODESYS%20Control%20for%20Linux%20SL%203.5.16.0.package
+# And here is the statup script, everything else is in there
+COPY --chown=${USR}:${USR} entrypoint.sh /entrypoint.sh
 
 #ENTRYPOINT [ "/usr/bin/dumb-init", "--", "/entrypoint.sh" ]
 ENTRYPOINT [ "/entrypoint.sh" ]

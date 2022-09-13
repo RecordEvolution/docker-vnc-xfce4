@@ -23,5 +23,5 @@ DESKTOP_VNC_PASSWORD:
 DESKTOP_ENV:          
     label: Desktop Env
     type: text        
-    defaultValue: ratpoison
+    defaultValue: xfce4 #ratpoison
     optional: true 
