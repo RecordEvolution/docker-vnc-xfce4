@@ -48,9 +48,9 @@ if [ "X${DESKTOP_ENV}" = "Xratpoison" ] ; then
 		echo "exec ${DESKTOP_ADDITIONAL_PROGRAMS}" >> ~/.ratpoisonrc
   else
   	# We run firefox at ratpoison startup
-  	echo "exec firefox" > ~/.ratpoisonrc && chmod +x ~/.ratpoisonrc
+  	# echo "exec firefox" > ~/.ratpoisonrc && chmod +x ~/.ratpoisonrc
+    echo "wine /home/user/.wine.cds/drive_c/CODESYS/CODESYS/Common/CODESYS.exe --culture=en" > ~/.ratpoisonrc && chmod +x ~/.ratpoisonrc
 	fi
-  # echo "wine /home/user/.wine.cds/drive_c/CODESYS/CODESYS/Common/CODESYS.exe --culture=en" > ~/.ratpoisonrc && chmod +x ~/.ratpoisonrc
 elif  [ "X${DESKTOP_ENV}" = "Xxfce4" ] ; then
 	echo "configure Xfce4"
 	# We run xfce4 at VNC server startup
