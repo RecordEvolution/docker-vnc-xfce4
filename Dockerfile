@@ -60,19 +60,21 @@ RUN     \
         echo "Install some tools" >&2                      \
         && apt-get update                                  \
         && apt-get install -y --no-install-recommends      \
-          curl                                             \
-          dumb-init                                        \
-          figlet                                           \
-          jq                                               \
-          libnss3-tools                                    \
-          mlocate                                          \
+          #curl                                             \
+          #dumb-init                                        \
+          #figlet                                           \
+          #jq                                               \
+          #libnss3-tools                                    \
+          #mlocate                                          \
           net-tools                                        \
-          sudo                                             \
-          vim                                              \
-          vlc                                              \
+          #sudo                                             \
+          #vim                                              \
+          #vlc                                              \
           xz-utils                                         \
-          zip wget psmisc                                             \
-        && apt-get install -y thunar-archive-plugin        \
+          #zip \
+          wget \
+          #psmisc                                             \
+        #&& apt-get install -y thunar-archive-plugin        \
         && apt-get clean                                   \
         && apt-get autoremove -y                           \
         && rm -rf /tmp/* /var/tmp/*                        \
@@ -87,7 +89,7 @@ RUN     \
         && printf '\nPackage: *\nPin: release o=LP-PPA-mozillateam\nPin-Priority: 1001\n' > /etc/apt/preferences.d/mozilla-firefox                     \
         && printf 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' > /etc/apt/apt.conf.d/51unattended-upgrades-firefox \
         && apt-get update                                     \
-        && apt-get install -y firefox --no-install-recommends \
+       # && apt-get install -y firefox --no-install-recommends \
         && apt-get clean                                      \
         && apt-get autoremove -y                              \
         && rm -rf /tmp/* /var/tmp/*                           \
