@@ -135,7 +135,7 @@ RUN     \
 EXPOSE  5900 6080
 
 # We set localtime
-RUN      if [ "X${TZ}" != "X" ] ; then if [ -f /usr/share/zoneinfo/${TZ} ] ; then rm -f /etc/localtime ; ln -s /usr/share/zoneinfo/${TZ} /etc/localtime ; fi ; fi
+# RUN      if [ "X${TZ}" != "X" ] ; then if [ -f /usr/share/zoneinfo/${TZ} ] ; then rm -f /etc/localtime ; ln -s /usr/share/zoneinfo/${TZ} /etc/localtime ; fi ; fi
 
 # And here is the statup script, everything else is in there
 COPY    entrypoint.sh /entrypoint.sh
